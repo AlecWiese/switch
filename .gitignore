@@ -16,6 +16,8 @@ vendor/
 
 # Go workspace file
 go.work
+.devcontainer/
+.github/
 
 # Built binaries
 reboot-switch-linux

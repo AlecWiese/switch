@@ -13,8 +13,6 @@ A simple Go program to reboot between Linux and Windows in a dual-boot system.
 - Automatically detects current OS
 - Sets next boot entry to the other OS (one-time boot by default)
 - Optional persistent mode to change default boot order
-- Skip confirmation prompts for scripting/automation
-- Verbose mode to show boot configuration details
 - Works with both UEFI and legacy BIOS systems
 - Supports Linux (using efibootmgr or grub-reboot)
 - Supports Windows (using bcdedit)
