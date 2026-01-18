@@ -1,62 +1,132 @@
-# OS Reboot Switcher
+# Switch
 
 A simple Go program to reboot between Linux and Windows in a dual-boot system.
 
 ## Features
 
 - Automatically detects current OS
-- Sets next boot entry to the other OS
+- Sets next boot entry to the other OS (one-time boot by default)
+- Optional persistent mode to change default boot order
+- Skip confirmation prompts for scripting/automation
+- Verbose mode to show boot configuration details
 - Works with both UEFI and legacy BIOS systems
 - Supports Linux (using efibootmgr or grub-reboot)
 - Supports Windows (using bcdedit)
 
-## Building
+## Download
 
-### Build for Linux:
-```bash
-GOOS=linux GOARCH=amd64 go build -o reboot-switch
-```
+Download pre-built binaries from the [latest release](https://git.moosefeelings.com/9093730/Switcher/releases/latest):
 
-### Build for Windows:
-```bash
-GOOS=windows GOARCH=amd64 go build -o reboot-switch.exe
-```
-
-### Build for both:
-```bash
-# Linux
-GOOS=linux GOARCH=amd64 go build -o reboot-switch-linux
-# Windows
-GOOS=windows GOARCH=amd64 go build -o reboot-switch.exe
-```
+- **Linux (amd64):** [switch-linux-amd64](https://git.moosefeelings.com/9093730/Switcher/releases/download/v1.0.0/switch-linux-amd64)
+- **Windows (amd64):** [switch-windows-amd64.exe](https://git.moosefeelings.com/9093730/Switcher/releases/download/v1.0.0/switch-windows-amd64.exe)
 
 ## Installation
 
-### On Linux:
-1. Build the binary for Linux
-2. Copy it to a directory in your PATH:
-   ```bash
-   sudo cp reboot-switch-linux /usr/local/bin/reboot-switch
-   sudo chmod +x /usr/local/bin/reboot-switch
-   ```
+### Quick Install on Linux:
+```bash
+# Download the binary
+wget https://git.moosefeelings.com/9093730/Switcher/releases/download/v1.0.0/switch-linux-amd64
 
-### On Windows:
-1. Build the binary for Windows
-2. Copy `reboot-switch.exe` to a directory in your PATH (e.g., `C:\Windows\System32` or create a custom directory)
+# Install to /usr/local/bin
+sudo cp switch-linux-amd64 /usr/local/bin/switch
+sudo chmod +x /usr/local/bin/switch
+
+# Done! Now you can use it
+sudo switch
+```
+
+### Quick Install on Windows:
+1. Download [switch-windows-amd64.exe](https://git.moosefeelings.com/9093730/Switcher/releases/download/v1.0.0/switch-windows-amd64.exe)
+2. Rename it to `switch.exe`
+3. Copy it to a directory in your PATH (e.g., `C:\Windows\System32`)
+4. Run as Administrator: `switch`
+
+## Building from Source
+
+If you prefer to build from source, use the included build script:
+
+```bash
+./build.sh
+```
+
+This will create:
+- `releases/switch-linux-amd64` - Linux binary
+- `releases/switch-windows-amd64.exe` - Windows binary
+
+### Manual Build:
+
+**For Linux:**
+```bash
+GOOS=linux GOARCH=amd64 go build -o switch
+```
+
+**For Windows:**
+```bash
+GOOS=windows GOARCH=amd64 go build -o switch.exe
+```
 
 ## Usage
 
-```bash
-# On Linux (to reboot to Windows)
-sudo reboot-switch
+### Basic Usage (One-Time Boot)
 
-# On Windows (to reboot to Linux) - Run as Administrator
-reboot-switch
+By default, the tool sets the boot entry for the **next reboot only**. After that single reboot, your system will return to its previous default boot entry.
+
+```bash
+# On Linux (to reboot to Windows once)
+sudo switch
+
+# On Windows (to reboot to Linux once) - Run as Administrator
+switch
 ```
 
-Show help:
+### Persistent Boot (Change Default)
+
+Use the `-p` flag to **permanently change** your default boot entry:
+
 ```bash
-reboot-switch -h
+# On Linux - make Windows the default boot entry
+sudo switch -p
+
+# On Windows - make Linux the default boot entry
+switch -p
+```
+
+⚠️ **Warning**: Persistent mode changes your BIOS/UEFI boot order permanently. The selected OS will remain the default until you change it again.
+
+### Skip Confirmation
+
+Use the `-y` flag to skip the confirmation prompt (useful for scripts):
+
+```bash
+# Automatically confirm and reboot
+sudo switch -y
+
+# Combine with persistent mode
+sudo switch -y -p
+```
+
+### Verbose Mode
+
+Use the `-v` flag to see detailed boot configuration information:
+
+```bash
+# Show current and new boot order
+sudo switch -v
+
+# Combine with other flags
+sudo switch -y -p -v
+```
+
+### Available Flags
+
+```bash
+switch           # Reboot to other OS (one-time, with confirmation)
+switch -y        # Skip confirmation prompt
+switch -p        # Make boot selection persistent (change default)
+switch -v        # Show verbose output with boot order details
+switch -y -p     # Skip confirmation and make persistent
+switch -y -p -v  # All flags combined
+switch -h        # Show help message
 ```
 
 ## Requirements

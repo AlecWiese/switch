@@ -21,3 +21,7 @@ go.work
 reboot-switch-linux
 reboot-switch.exe
 reboot-switch
+switch-linux-amd64
+switch-windows-amd64.exe
+switch
+releases/
